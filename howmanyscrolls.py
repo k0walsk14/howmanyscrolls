@@ -37,28 +37,31 @@ class MyClient(discord.Client):
 
                 sync_tiktoks = 0
                 sync_reels = 0
+                processed_messages = 0  # Our heartbeat tracker
                 target_channel = self.get_channel(self.links_channel_id)
 
                 print("Starting historical sync... (scanning the whole discord for tt/reels links and counting them)")
                 async for old_msg in target_channel.history(limit=None):
+                    processed_messages += 1
+                    
+                    # Every 5,000 messages, print a status heartbeat
+                    if processed_messages % 5000 == 0:
+                        print(f"🔄 Processed {processed_messages}/91701 messages... (Found so far: {sync_tiktoks} tiktoks, {sync_reels} reels)")
+
                     if self.target_id == old_msg.author.id:
                         old_content_lower = old_msg.content.lower()
-                    #getting rid of capitalization issues by making all message content lowercap
                         tiktok = 'tiktok.com'
                         reel = 'instagram.com'
 
                         if tiktok in old_content_lower:
-                        #executing the database.py so that we permanently save the data about the tiktok count 
-                            database.increment_count('tiktok')
                             sync_tiktoks += 1
 
                         if reel in old_content_lower:
-                        #executing the database.py so that we permanently save the data about the reel count
-                            database.increment_count('reel')
                             sync_reels += 1
+
+                database.save_final_sync(sync_tiktoks, sync_reels)
                 print(f"deleted {deleted_data} during the !sync")
                 print(f"Successfully found and counted {sync_tiktoks} tiktoks and {sync_reels} reels")
-
 
 
 intents = discord.Intents.default()
