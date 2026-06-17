@@ -28,7 +28,7 @@ def increment_count(platform):
     with open('counts.json', 'w') as file:
         json.dump(data, file, indent=4)
 
-def save_final_sync(tiktok_total, reel_total):
+def save_final_count(tiktok_total, reel_total):
     final_data = {
         "tiktok": tiktok_total,
         "reel": reel_total

@@ -5,9 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class MyClient(discord.Client):
-    #ja
     admin_id = int(os.getenv('ADMIN_ID'))
-    #kuba
     target_id = int(os.getenv('TARGET_ID'))
     links_channel_id = int(os.getenv('LINKS_CHANNEL_ID'))
 
@@ -46,7 +44,7 @@ class MyClient(discord.Client):
                     
                     # Every 5,000 messages, print a status heartbeat
                     if processed_messages % 5000 == 0:
-                        print(f"🔄 Processed {processed_messages}/91701 messages... (Found so far: {sync_tiktoks} tiktoks, {sync_reels} reels)")
+                        print(f"🔄 Processed {processed_messages} (Found so far: {sync_tiktoks} tiktoks, {sync_reels} reels)")
 
                     if self.target_id == old_msg.author.id:
                         old_content_lower = old_msg.content.lower()
@@ -59,7 +57,7 @@ class MyClient(discord.Client):
                         if reel in old_content_lower:
                             sync_reels += 1
 
-                database.save_final_sync(sync_tiktoks, sync_reels)
+                database.save_final_count(sync_tiktoks, sync_reels)
                 print(f"deleted {deleted_data} during the !sync")
                 print(f"Successfully found and counted {sync_tiktoks} tiktoks and {sync_reels} reels")
 
