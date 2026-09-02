@@ -1,10 +1,19 @@
+import os
 import sqlite3
-import discord
+from dotenv import load_dotenv
+load_dotenv()
+DATABASE_FILE = os.getenv("DATABASE_FILE", "scrolls.db")
 
 #1 initialize the db for first run of the bot
 ## create and read? 
+
+def get_connection():
+    conn = sqlite3.connect(DATABASE_FILE)
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
 def init_db():
-    conn = sqlite3.connect('scrolls.db')
+    conn = get_connection()
     cursor = conn.cursor()
 
     #create the server_settings table if not exists
@@ -29,12 +38,12 @@ def init_db():
     
     conn.commit()
     conn.close()
-    print("databse and tables initialized successfully")
+    print("database and tables initialized successfully")
 
 #2 server settings for what discord the db is for and what chat and what users
 ## create read and update
 def save_settings(guild_id, channel_id):
-    conn = sqlite3.connect('scrolls.db')
+    conn = get_connection()
     cursor = conn.cursor()
 
     #insert a new row of guild(discord server) and or update channel if guild(discord server) already exists in db
@@ -51,7 +60,7 @@ def save_settings(guild_id, channel_id):
 
 # Retrieves the authorized tracking channel ID for a designated server. (This lets bot know what discord is the message coming from)
 def get_settings(guild_id):
-    conn = sqlite3.connect('scrolls.db')
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute('SELECT channel_id FROM server_settings WHERE guild_id = ?', (guild_id,))
@@ -65,7 +74,7 @@ def get_settings(guild_id):
 #4 our db of tiktoks/reels
 ## read and update
 def log_scroll(message_id, guild_id, author_id, platform):
-    conn = sqlite3.connect('scrolls.db')
+    conn = get_connection()
     cursor = conn.cursor()
 
     try:
@@ -83,7 +92,7 @@ def log_scroll(message_id, guild_id, author_id, platform):
         conn.close()
 
 def log_scroll_batch(records):
-    conn = sqlite3.connect('scrolls.db')
+    conn = get_connection()
     cursor = conn.cursor()
     
     try:
@@ -100,8 +109,10 @@ def log_scroll_batch(records):
     finally:
         conn.close()
 
+
+#this function will fetch the bot all known ids that are already in the db
 def get_all_logged_ids():
-    conn = sqlite3.connect('scrolls.db')
+    conn = get_connection()
     cursor = conn.cursor()
     # We only pull the message_id column to keep the data package tiny
     cursor.execute('SELECT message_id FROM scroll_logs')

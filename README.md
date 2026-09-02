@@ -24,7 +24,7 @@ https://discord.com/oauth2/authorize?client_id=1514230627250081813&permissions=6
 Go to the text channel where you want to log media links and type `!setup`. This links your discord channel to the database.
 
 3. **Sync Historical Archives:** Type `!sync` to import the channel's past links into the database.  
-   *Note: The first run can take some time depending on your channel's total message count. Don't worry, it isn't bugged, it's just thoroughly analyzing the history! Later syncs will be lightning fast because the bot's automatically stops scanning once it detects too many consecutive duplicate entries.*
+   *Note: First run can take some time depending on your channel's total message count. Don't worry, it isn't bugged, it's just thoroughly analyzing the history! Later syncs will be lightning fast because the bot's automatically stops scanning once it detects too many consecutive duplicate entries.*
 
 ### How It Works
 When the bot is online, it tracks the designated Discord channel live. New media links are instantly processed and committed to the database, which the bot confirms visually by reacting with a `✅`.
@@ -41,6 +41,5 @@ Use the `!help` command to see a full list of available commands and explore eve
 - **Clearer answers from the bot:** For example when the bot is done with !sync let it print on the discord chat how many links were updated to the db and how much failed if any and which one it was that failed.
 - **Multi-Channel Clustering:** Change the configuration layer to utilize a composite primary key, enabling multi-channel indexing per discord server while maintaining speed and low overload (bot follows multiple chats u select in the discord).
 3. **Low Priority**
-- **Hidden Discord Log Channel:** Add a feature that sends a quiet message to a private staff channel whenever a link is counted. This lets you check if the bot is working perfectly without needing to look at your computer's terminal console.
 - **Screen Time Calculator:** Look into a way to parse the shared links, find out how long the video is, and calculate exactly how many minutes of video your friend has sent to the chat.
 - **Progress Charts:** Use a Python chart library to turn the database stats into visual graphs, showing how a user's link-sending habits progressed month over month.
